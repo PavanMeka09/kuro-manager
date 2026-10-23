@@ -123,26 +123,24 @@ export async function POST(req: NextRequest) {
       const newCredits = previousCredits - consumeCredits;
       const now = new Date();
 
-      // Atomic update in transaction
-      await db.transaction(async (tx) => {
-        await tx
-          .update(schema.licenses)
-          .set({
-            creditsRemaining: newCredits,
-            updatedAt: now,
-          })
-          .where(eq(schema.licenses.id, license.id));
+      // Update balance & record audit log (compatible with Neon HTTP serverless)
+      await db
+        .update(schema.licenses)
+        .set({
+          creditsRemaining: newCredits,
+          updatedAt: now,
+        })
+        .where(eq(schema.licenses.id, license.id));
 
-        await tx.insert(schema.creditTransactions).values({
-          id: crypto.randomUUID(),
-          licenseId: license.id,
-          adminId: null,
-          adminEmail: "EXE Client",
-          previousCredits,
-          newCredits,
-          reason: reason || `EXE Client consumed ${consumeCredits} credit(s)`,
-          createdAt: now,
-        });
+      await db.insert(schema.creditTransactions).values({
+        id: crypto.randomUUID(),
+        licenseId: license.id,
+        adminId: null,
+        adminEmail: "EXE Client",
+        previousCredits,
+        newCredits,
+        reason: reason || `EXE Client consumed ${consumeCredits} credit(s)`,
+        createdAt: now,
       });
 
       return NextResponse.json({

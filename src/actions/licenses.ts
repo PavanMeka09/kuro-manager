@@ -128,30 +128,28 @@ export async function createLicense(formData: {
   const id = crypto.randomUUID();
   const now = new Date();
 
-  await db.transaction(async (tx) => {
-    await tx.insert(schema.licenses).values({
-      id,
-      registrationNumber: normalizedReg,
-      creditsRemaining: initialCredits,
-      status: "active",
-      notes: notes || null,
-      createdAt: now,
-      updatedAt: now,
-    });
-
-    if (initialCredits > 0) {
-      await tx.insert(schema.creditTransactions).values({
-        id: crypto.randomUUID(),
-        licenseId: id,
-        adminId: admin.id,
-        adminEmail: admin.email,
-        previousCredits: 0,
-        newCredits: initialCredits,
-        reason: `Initial balance allocation: +${initialCredits} credits`,
-        createdAt: now,
-      });
-    }
+  await db.insert(schema.licenses).values({
+    id,
+    registrationNumber: normalizedReg,
+    creditsRemaining: initialCredits,
+    status: "active",
+    notes: notes || null,
+    createdAt: now,
+    updatedAt: now,
   });
+
+  if (initialCredits > 0) {
+    await db.insert(schema.creditTransactions).values({
+      id: crypto.randomUUID(),
+      licenseId: id,
+      adminId: admin.id,
+      adminEmail: admin.email,
+      previousCredits: 0,
+      newCredits: initialCredits,
+      reason: `Initial balance allocation: +${initialCredits} credits`,
+      createdAt: now,
+    });
+  }
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/licenses");
@@ -198,25 +196,23 @@ export async function adjustCredits(data: {
 
   const now = new Date();
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(schema.licenses)
-      .set({
-        creditsRemaining: newCredits,
-        updatedAt: now,
-      })
-      .where(eq(schema.licenses.id, licenseId));
+  await db
+    .update(schema.licenses)
+    .set({
+      creditsRemaining: newCredits,
+      updatedAt: now,
+    })
+    .where(eq(schema.licenses.id, licenseId));
 
-    await tx.insert(schema.creditTransactions).values({
-      id: crypto.randomUUID(),
-      licenseId,
-      adminId: admin.id,
-      adminEmail: admin.email,
-      previousCredits,
-      newCredits,
-      reason: `${mode.toUpperCase()} (${reason})`,
-      createdAt: now,
-    });
+  await db.insert(schema.creditTransactions).values({
+    id: crypto.randomUUID(),
+    licenseId,
+    adminId: admin.id,
+    adminEmail: admin.email,
+    previousCredits,
+    newCredits,
+    reason: `${mode.toUpperCase()} (${reason})`,
+    createdAt: now,
   });
 
   revalidatePath("/dashboard");

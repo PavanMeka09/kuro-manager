@@ -63,26 +63,24 @@ export async function createAdminUser(formData: {
   const hashedPassword = await hashPassword(password);
   const now = new Date();
 
-  await db.transaction(async (tx) => {
-    await tx.insert(schema.user).values({
-      id: newAdminId,
-      name,
-      email: normalizedEmail,
-      emailVerified: true,
-      role: "admin",
-      createdAt: now,
-      updatedAt: now,
-    });
+  await db.insert(schema.user).values({
+    id: newAdminId,
+    name,
+    email: normalizedEmail,
+    emailVerified: true,
+    role: "admin",
+    createdAt: now,
+    updatedAt: now,
+  });
 
-    await tx.insert(schema.account).values({
-      id: crypto.randomUUID(),
-      accountId: newAdminId, // Better Auth requires accountId === user.id for credentials provider
-      providerId: "credential",
-      userId: newAdminId,
-      password: hashedPassword,
-      createdAt: now,
-      updatedAt: now,
-    });
+  await db.insert(schema.account).values({
+    id: crypto.randomUUID(),
+    accountId: newAdminId, // Better Auth requires accountId === user.id for credentials provider
+    providerId: "credential",
+    userId: newAdminId,
+    password: hashedPassword,
+    createdAt: now,
+    updatedAt: now,
   });
 
   revalidatePath("/dashboard/admins");
