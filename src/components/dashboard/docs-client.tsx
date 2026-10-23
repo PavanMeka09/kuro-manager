@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function DocsClient() {
-  const [testRegNumber, setTestRegNumber] = useState("KURO-1001");
+  const [testRegNumber, setTestRegNumber] = useState("");
   const [consumeCredits, setConsumeCredits] = useState<number>(0);
   const [apiResponse, setApiResponse] = useState<string | null>(null);
   const [responseStatus, setResponseStatus] = useState<number | null>(null);
@@ -97,35 +97,10 @@ export function DocsClient() {
                 <Input
                   value={testRegNumber}
                   onChange={(e) => setTestRegNumber(e.target.value.toUpperCase())}
-                  placeholder="e.g. KURO-1001"
+                  placeholder="Enter registration number (e.g. KURO-1001)"
                   required
                   className="font-mono text-sm tracking-wide text-white"
                 />
-                <div className="flex gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setTestRegNumber("KURO-1001")}
-                    className="text-[11px] text-indigo-400 hover:underline font-mono cursor-pointer"
-                  >
-                    Use KURO-1001 (Active)
-                  </button>
-                  <span className="text-zinc-600">•</span>
-                  <button
-                    type="button"
-                    onClick={() => setTestRegNumber("KURO-2049")}
-                    className="text-[11px] text-rose-400 hover:underline font-mono cursor-pointer"
-                  >
-                    Use KURO-2049 (Disabled)
-                  </button>
-                  <span className="text-zinc-600">•</span>
-                  <button
-                    type="button"
-                    onClick={() => setTestRegNumber("NON-EXISTENT")}
-                    className="text-[11px] text-zinc-400 hover:underline font-mono cursor-pointer"
-                  >
-                    Non-existent
-                  </button>
-                </div>
               </div>
 
               <div>

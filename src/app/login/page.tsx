@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { Shield, Lock, Mail, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Shield, Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -39,11 +39,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleFillDemoAdmin = () => {
-    setEmail("mekapavan99@gmail.com");
-    setPassword("Pavan99@business");
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#090a0f] p-4 relative overflow-hidden">
       {/* Background ambient lighting */}
@@ -59,8 +54,8 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-1.5">
               KURO <span className="text-indigo-400 font-light">MANAGER</span>
             </h1>
-            <p className="text-xs text-zinc-400 mt-1 font-mono tracking-wider">
-              AUTHORIZATION & CREDIT PORTAL
+            <p className="text-xs text-zinc-400 mt-1 font-mono tracking-wider uppercase">
+              Admin Portal
             </p>
           </div>
 
@@ -83,10 +78,11 @@ export default function LoginPage() {
                 <Input
                   type="email"
                   required
-                  placeholder="mekapavan99@gmail.com"
+                  placeholder="admin@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-9 bg-zinc-900/80 border-zinc-700/80 text-white placeholder:text-zinc-600"
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -104,6 +100,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-9 bg-zinc-900/80 border-zinc-700/80 text-white placeholder:text-zinc-600"
+                  autoComplete="current-password"
                 />
               </div>
             </div>
@@ -113,24 +110,14 @@ export default function LoginPage() {
               isLoading={isLoading}
               className="w-full h-10 mt-2 font-medium"
             >
-              Sign In to Admin Portal
+              Sign In
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </form>
 
-          {/* Quick Demo Fill Pill */}
-          <div className="mt-6 pt-6 border-t border-zinc-800/80 text-center">
-            <button
-              type="button"
-              onClick={handleFillDemoAdmin}
-              className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-indigo-400 transition-colors cursor-pointer"
-            >
-              <CheckCircle2 className="h-3.5 w-3.5 text-indigo-400" />
-              Fill Default Admin Credentials
-            </button>
-            <div className="text-[11px] text-zinc-400 mt-2">
-              Registration numbers & EXE authorization API are restricted to authenticated admins. Public registration is disabled.
-            </div>
+          {/* Production Footer */}
+          <div className="mt-8 pt-6 border-t border-zinc-800 text-center text-[11px] text-zinc-500">
+            Secure administrative access only. Public registration is disabled.
           </div>
         </div>
       </div>

@@ -106,7 +106,7 @@ export function DashboardNav({ userEmail, userName }: NavProps) {
       <div className="p-4 border-t border-zinc-800 flex items-center justify-between">
         <div className="overflow-hidden pr-2">
           <p className="text-xs font-semibold text-white truncate">{userName || "Administrator"}</p>
-          <p className="text-[11px] text-zinc-400 truncate">{userEmail || "admin@kuro.local"}</p>
+          <p className="text-[11px] text-zinc-400 truncate">{userEmail || "admin@system"}</p>
         </div>
         <Button
           variant="ghost"
