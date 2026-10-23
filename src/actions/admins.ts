@@ -1,6 +1,6 @@
 "use server";
 
-import { db, schema, ensureDatabaseSchema } from "@/db";
+import { db, schema } from "@/db";
 import { eq, desc } from "drizzle-orm";
 import { requireAdmin } from "@/lib/session";
 import { hashPassword } from "better-auth/crypto";
@@ -16,7 +16,6 @@ const CreateAdminSchema = z.object({
 
 export async function listAdmins() {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   const admins = await db
     .select({
@@ -38,7 +37,6 @@ export async function createAdminUser(formData: {
   password: string;
 }) {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   const parsed = CreateAdminSchema.safeParse(formData);
   if (!parsed.success) {
@@ -89,7 +87,6 @@ export async function createAdminUser(formData: {
 
 export async function removeAdminUser(adminIdToRemove: string) {
   const currentAdmin = await requireAdmin();
-  await ensureDatabaseSchema();
 
   if (currentAdmin.id === adminIdToRemove) {
     return { success: false, error: "You cannot delete your own admin account." };

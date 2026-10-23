@@ -1,6 +1,6 @@
 "use server";
 
-import { db, schema, ensureDatabaseSchema } from "@/db";
+import { db, schema } from "@/db";
 import { eq, desc, sql, ilike, and } from "drizzle-orm";
 import { requireAdmin } from "@/lib/session";
 import { z } from "zod";
@@ -27,7 +27,6 @@ const AdjustCreditsSchema = z.object({
 
 export async function getDashboardStats() {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   const allLicenses = await db.select().from(schema.licenses);
 
@@ -77,7 +76,6 @@ export async function getDashboardStats() {
 
 export async function getLicenses(query?: string, statusFilter?: string) {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   const conditions = [];
 
@@ -104,7 +102,6 @@ export async function createLicense(formData: {
   notes?: string;
 }) {
   const admin = await requireAdmin();
-  await ensureDatabaseSchema();
 
   const parsed = CreateLicenseSchema.safeParse(formData);
   if (!parsed.success) {
@@ -163,7 +160,6 @@ export async function adjustCredits(data: {
   reason: string;
 }) {
   const admin = await requireAdmin();
-  await ensureDatabaseSchema();
 
   const parsed = AdjustCreditsSchema.safeParse(data);
   if (!parsed.success) {
@@ -223,7 +219,6 @@ export async function adjustCredits(data: {
 
 export async function toggleLicenseStatus(licenseId: string) {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   const record = await db
     .select()
@@ -254,7 +249,6 @@ export async function toggleLicenseStatus(licenseId: string) {
 
 export async function deleteLicense(licenseId: string) {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   await db.delete(schema.licenses).where(eq(schema.licenses.id, licenseId));
 
@@ -266,7 +260,6 @@ export async function deleteLicense(licenseId: string) {
 
 export async function getLicenseTransactions(licenseId?: string) {
   await requireAdmin();
-  await ensureDatabaseSchema();
 
   const query = db
     .select({

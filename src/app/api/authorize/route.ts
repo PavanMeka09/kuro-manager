@@ -17,8 +17,6 @@ const AuthorizeRequestSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    await ensureDatabaseSchema();
-
     // 1. IP & Rate Limiting Check
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
     const rateLimit = checkRateLimit(`auth:${ip}`, 100, 2); // 100 max bucket, 2 tokens/sec
