@@ -40,8 +40,8 @@ export default function LoginPage() {
   };
 
   const handleFillDemoAdmin = () => {
-    setEmail("admin@kuro.local");
-    setPassword("KuroAdmin2026!");
+    setEmail("mekapavan99@gmail.com");
+    setPassword("Pavan99@business");
   };
 
   return (
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 <Input
                   type="email"
                   required
-                  placeholder="admin@kuro.local"
+                  placeholder="mekapavan99@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-9 bg-zinc-900/80 border-zinc-700/80 text-white placeholder:text-zinc-600"

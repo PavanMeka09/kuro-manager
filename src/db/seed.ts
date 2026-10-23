@@ -10,8 +10,8 @@ import crypto from "crypto";
 export async function seedDatabase() {
   await ensureDatabaseSchema();
 
-  const adminEmail = process.env.ADMIN_INITIAL_EMAIL || "admin@kuro.local";
-  const adminPassword = process.env.ADMIN_INITIAL_PASSWORD || "KuroAdmin2026!";
+  const adminEmail = process.env.ADMIN_INITIAL_EMAIL || "mekapavan99@gmail.com";
+  const adminPassword = process.env.ADMIN_INITIAL_PASSWORD || "Pavan99@business";
 
   // 1. Check if admin user already exists
   const existingUsers = await db
