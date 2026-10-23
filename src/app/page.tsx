@@ -1,0 +1,13 @@
+import { getCurrentAdmin } from "@/lib/session";
+import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const admin = await getCurrentAdmin();
+  if (admin) {
+    redirect("/dashboard");
+  } else {
+    redirect("/login");
+  }
+}
