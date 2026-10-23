@@ -1,3 +1,7 @@
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+dotenv.config();
+
 import { neon } from "@neondatabase/serverless";
 import { drizzle as drizzleNeon, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 import { PGlite } from "@electric-sql/pglite";
@@ -126,10 +130,17 @@ export async function ensureDatabaseSchema() {
     if (globalThis.__kuroPglite) {
       await globalThis.__kuroPglite.exec(INIT_SQL);
     } else {
-      await db.execute(sql.raw(INIT_SQL));
+      const statements = INIT_SQL.split(";")
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+
+      for (const statement of statements) {
+        await db.execute(sql.raw(statement));
+      }
     }
     schemaInitialized = true;
   } catch (error) {
     console.error("Failed to auto-ensure database schema:", error);
+    throw error;
   }
 }

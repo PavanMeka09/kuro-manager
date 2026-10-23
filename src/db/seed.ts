@@ -1,3 +1,7 @@
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
+dotenv.config();
+
 import { db, schema, ensureDatabaseSchema } from "./index";
 import { hashPassword } from "better-auth/crypto";
 import { eq } from "drizzle-orm";
