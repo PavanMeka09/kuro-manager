@@ -4,7 +4,8 @@ import { createAuthClient } from "better-auth/react";
 import { adminClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || (typeof window !== "undefined" ? window.location.origin : "http://localhost:3000"),
+  // Omitting baseURL allows Better Auth to dynamically use window.location.origin
+  // so requests always match the browser's origin.
   plugins: [
     adminClient(),
   ],

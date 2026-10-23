@@ -3,6 +3,13 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin } from "better-auth/plugins";
 import { db, schema } from "@/db";
 
+const getBaseURL = () => {
+  if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "https://eager-volta-sand.vercel.app";
+};
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -27,8 +34,19 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 days session duration
     updateAge: 60 * 60 * 24, // 1 day update window
   },
+  trustedOrigins: [
+    "https://eager-volta-sand.vercel.app",
+    "https://*.vercel.app",
+    process.env.BETTER_AUTH_URL || "",
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "",
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "",
+    "http://localhost:3000",
+  ].filter(Boolean),
   secret: process.env.BETTER_AUTH_SECRET || "kuro-manager-super-secure-session-secret-key-32-chars",
-  baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
+  baseURL: getBaseURL(),
+  advanced: {
+    useSecureCookies: process.env.NODE_ENV === "production",
+  },
 });
 
 export type Session = typeof auth.$Infer.Session;
